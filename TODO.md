@@ -2,6 +2,7 @@
 
 [x] create github repo
 [x] exec with subprocess
+[] collect output in array with os-specific line-end as separator
 [] redirect > to file and /dev/null
 [] redirect >> to file and /dev/null
 [] handle commands with params
