@@ -91,7 +91,7 @@ class Command(AbsCommand):
                       stdout=PIPE, stderr=PIPE)
 
 
-        import pudb; pudb.set_trace()
+        # import pudb; pudb.set_trace()
 
         if self.stdin:
             self.stdout, self.stderr = p \
@@ -116,7 +116,7 @@ class Command(AbsCommand):
         return self
 
     def __or__(self, other):
-        import pudb; pudb.set_trace()
+        # import pudb; pudb.set_trace()
 
         self()
 
