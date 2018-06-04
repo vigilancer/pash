@@ -7,3 +7,7 @@ or because it sounds like `bash` but for python.
 pick[any].
 
 [picture-of-python-looking-like-a-shell]
+
+# Examples:
+# pattern = 'Pip'
+# (_('ls') | _(f'grep {pattern}')).stdout
