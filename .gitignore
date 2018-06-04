@@ -1,3 +1,4 @@
 Pipfile.lock
 tags
 dist/
+*.egg-info
