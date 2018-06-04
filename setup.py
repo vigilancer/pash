@@ -1,6 +1,6 @@
 import setuptools
 
-with open("README.adoc", "r") as fh:
+with open("README.rst", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
@@ -10,7 +10,7 @@ setuptools.setup(
     author_email="vigilancer@example.com",
     description="shell pipes and redirecting for python",
     long_description=long_description,
-    long_description_content_type="text/asciidoc",
+    long_description_content_type="text/x-rst",
     url="https://github.com/vigilancer/pash",
     packages=setuptools.find_packages(),
     classifiers=(
