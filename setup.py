@@ -4,7 +4,7 @@ with open("README.rst", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="pash",
+    name="psh",
     version="0.0.1",
     author="Andrey Elizarov",
     author_email="vigilancer@example.com",
