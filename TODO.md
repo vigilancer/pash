@@ -23,4 +23,5 @@
 [x] implement __str__ (what should go there?)
 [] add examples for && and || (with 'and' and 'or')
 [] make gif with all usecases
-[] research alternative implementation: https://stackoverflow.com/questions/15008807/overriding-or-operator-on-python-classes
+[x] research alternative implementation: https://stackoverflow.com/questions/15008807/overriding-or-operator-on-python-classes
+[] add to readme 'restrictions' chapter
