@@ -11,3 +11,9 @@ pick[any].
 # Examples:
 # pattern = 'Pip'
 # (_('ls') | _(f'grep {pattern}')).stdout
+
+```
+from psh.commands import Command as _
+print(_('ls -la')() | _('grep psh') | _('grep 20'))
+```
+
