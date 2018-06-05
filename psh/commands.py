@@ -66,7 +66,10 @@ class BaseCommand():
 
     def __str__(self):
         try:
-            return self.stderr
+            if len(self.stderr) > 0:
+                return self.stderr
+            else:
+                return self.stdout
         except StderrMissing:
             return self.stdout
 
