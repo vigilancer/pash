@@ -2,7 +2,8 @@
 
 
 import shlex
-from subprocess import PIPE, Popen
+from subprocess import PIPE, STDOUT, Popen
+import subprocess
 
 
 class BaseCommandException(Exception):
@@ -38,14 +39,6 @@ class BaseCommand():
     _stderr = None
 
     code = None
-
-    def __call__(self):
-        ''' execute command.
-            should change self.code after command execution
-        '''
-
-        if self.code is not None:
-            raise AlreadyCalled(self.command_line)
 
     def __or__(self, other):
         ''' | '''
@@ -114,41 +107,63 @@ class Command(BaseCommand):
         self._args = shlex.split(cmd)
         self._timeout = timeout
 
-    def __call__(self):
-        super().__call__()
+    def _raise_if_was_called(self):
+        if self.code is not None:
+            raise AlreadyCalled(self.command_line)
 
+    def _exec_silent(self):
+        self._raise_if_was_called()
+
+        # XXX make distinction based on stdin more visible in code
         try:
             stdin = self.stdin
             p = Popen(self._args,
+                      stdin=PIPE,
+                      stdout=PIPE, stderr=PIPE,
                       shell=False,
                       universal_newlines=True,
-                      stdin=PIPE,
-                      stdout=PIPE, stderr=PIPE)
+                      )
             self.stdout, self.stderr = p \
                 .communicate(input=stdin, timeout=self._timeout)
         except StdinMissing:
             p = Popen(self._args,
+                      stdout=PIPE, stderr=PIPE,
                       shell=False,
                       universal_newlines=True,
-                      stdout=PIPE, stderr=PIPE)
+                      )
 
             self.stdout, self.stderr = p \
                 .communicate(timeout=self._timeout)
 
         self.code = p.returncode
-
         return self
+
+    def _exec(self):
+        self._raise_if_was_called()
+
+        p = subprocess.run(self._args,
+                           stderr=STDOUT,
+                           shell=False,
+                           universal_newlines=True,
+                           check=True,
+                           )
+
+        self.code = p.returncode
+        return self
+
+    def __call__(self):
+        self._exec()
 
     def __or__(self, other):
         ''' works like 'set -o pipefail' by default '''
 
         try:
-            self()
+            self._exec_silent()
         except AlreadyCalled:
             pass
 
         if self:
             other.stdin = self.stdout
-            return other()
+            return other._exec_silent()
         else:
             return self
