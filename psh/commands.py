@@ -73,7 +73,7 @@ class BaseCommand():
 
     @property
     def stdin(self):
-        if self._stdin is None:
+        if not self._stdin:
             raise StdinMissing()
         return self._stdin
 
@@ -83,7 +83,7 @@ class BaseCommand():
 
     @property
     def stdout(self):
-        if self._stdout is None:
+        if not self._stdout:
             raise StdoutMissing()
         return self._stdout
 
@@ -93,7 +93,7 @@ class BaseCommand():
 
     @property
     def stderr(self):
-        if self._stderr is None:
+        if not self._stderr:
             raise StderrMissing()
         return self._stderr
 
