@@ -28,3 +28,4 @@
 - [] simplify env variable access (os.environ- ['HOME'] etc)
 - [] maybe it's worth to reimplement 'test' command (-z seems neat)
 - [] __call__ with argument --timeout_sec. and make it None but default
+- [] retab
