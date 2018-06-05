@@ -30,13 +30,12 @@ class StderrMissing(BaseCommandException):
 
 
 class BaseCommand():
-    ''' only stdin and code could be None '''
 
     command_line = None
 
     _stdin = None
-    _stdout = ''
-    _stderr = ''
+    _stdout = None
+    _stderr = None
 
     code = None
 
