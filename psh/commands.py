@@ -3,6 +3,7 @@
 
 import shlex
 from subprocess import PIPE, Popen
+import os
 
 
 class BaseCommandException(Exception):
@@ -17,13 +18,26 @@ class NeverCalled(BaseCommandException):
     pass
 
 
+class StdinMissing(BaseCommandException):
+    pass
+
+
+class StdoutMissing(BaseCommandException):
+    pass
+
+
+class StderrMissing(BaseCommandException):
+    pass
+
+
 class BaseCommand():
 
     command_line = None
 
-    stdin = None
-    stdout = None
-    stderr = None
+    _stdin = None
+    _stdout = None
+    _stderr = None
+
     code = None
 
     def __call__(self):
@@ -50,6 +64,57 @@ class BaseCommand():
             raise NeverCalled()
         return self.code == 0
 
+    @property
+    def stdin(self):
+        if self._stdin is None:
+            raise StdinMissing()
+        return self._stdin
+
+    @stdin.setter
+    def stdin(self, value):
+        self._stdin = value
+
+    @property
+    def stdout(self):
+        if self._stdout is None:
+            raise StdoutMissing()
+        return self._stdout
+
+    @stdout.setter
+    def stdout(self, value):
+        self._stdout = value
+
+    @property
+    def stderr(self):
+        if self._stderr is None:
+            raise StderrMissing()
+        return self._stderr
+
+    @stderr.setter
+    def stderr(self, value):
+        self._stderr = value
+
+    @property
+    def stdin_formatted(self):
+        return list(filter(
+            lambda x: len(x) > 0,
+            self.stdin.split(os.linesep)
+        ))
+
+    @property
+    def stdout_formatted(self):
+        return list(filter(
+            lambda x: len(x) > 0,
+            self.stdout.split(os.linesep)
+        ))
+
+    @property
+    def stderr_formatted(self):
+        return list(filter(
+            lambda x: len(x) > 0,
+            self.stderr.split(os.linesep)
+        ))
+
 
 class Command(BaseCommand):
 
@@ -64,16 +129,16 @@ class Command(BaseCommand):
     def __call__(self):
         super().__call__()
 
-        if self.stdin:
+        try:
+            stdin = self.stdin
             p = Popen(self._args,
                       shell=False,
                       universal_newlines=True,
                       stdin=PIPE,
                       stdout=PIPE, stderr=PIPE)
-
             self.stdout, self.stderr = p \
-                .communicate(input=self.stdin, timeout=self._timeout)
-        else:
+                .communicate(input=stdin, timeout=self._timeout)
+        except StdinMissing:
             p = Popen(self._args,
                       shell=False,
                       universal_newlines=True,
