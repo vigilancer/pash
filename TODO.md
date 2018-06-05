@@ -26,3 +26,5 @@
 [] make gif with all usecases
 [x] research alternative implementation: https://stackoverflow.com/questions/15008807/overriding-or-operator-on-python-classes
 [] add to readme 'restrictions' chapter
+[] simplify env variable access (os.environ['HOME'] etc)
+[] maybe it's worth to reimplement 'test' command (-z seems neat)
