@@ -8,12 +8,13 @@
 [] handle commands with params
 [x] stub not implemented operators
 [x] override truth (__bool__) based on return code (nonzero == False)
-[] emulate `set -e` and/or `set -o pipefail`
-[] implement 'pipefail' somehow.
+[x] emulate `set -e` and/or `set -o pipefail`
+[x] implement 'pipefail' somehow.
 #       maybe with `|=` (__ior__)
 #       _('ls') | _('grep') |= ('xargs')
 #       if `grep` fails, whole chain will fail and xargs will not be executed
-[] maybe pipe by default should work in `pipefail` mode, and __ior__ override it
+[x] maybe pipe by default should work in `pipefail` mode, and __ior__ override it
+#       but without __ior__
 [] redirect stdout and stderror
 [] redirect to file descriptors and filenames
 [] write tests
