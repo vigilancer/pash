@@ -6,8 +6,8 @@
 [] redirect > to file and /dev/null
 [] redirect >> to file and /dev/null
 [] handle commands with params
-[] stub not implemented operators
-[] override truth (__bool__) based on return code (nonzero == False)
+[x] stub not implemented operators
+[x] override truth (__bool__) based on return code (nonzero == False)
 [] emulate `set -e` and/or `set -o pipefail`
 [] implement 'pipefail' somehow.
 #       maybe with `|=` (__ior__)
