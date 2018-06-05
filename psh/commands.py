@@ -102,25 +102,25 @@ class BaseCommand():
         self._stderr = value
 
     @property
-    def stdin_formatted(self):
-        return list(filter(
+    def stdin_array(self, sep=os.linesep):
+        return filter(
             lambda x: len(x) > 0,
-            self.stdin.split(os.linesep)
-        ))
+            self.stdin.split(sep)
+        )
 
     @property
-    def stdout_formatted(self):
-        return list(filter(
+    def stdout_array(self, sep=os.linesep):
+        return filter(
             lambda x: len(x) > 0,
-            self.stdout.split(os.linesep)
-        ))
+            self.stdout.split(sep)
+        )
 
     @property
-    def stderr_formatted(self):
-        return list(filter(
+    def stderr_array(self, sep=os.linesep):
+        return filter(
             lambda x: len(x) > 0,
-            self.stderr.split(os.linesep)
-        ))
+            self.stderr.split(sep)
+        )
 
 
 class Command(BaseCommand):
