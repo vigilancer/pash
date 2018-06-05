@@ -43,8 +43,9 @@ class BaseCommand():
         ''' execute command.
             should change self.code after command execution
         '''
+
         if self.code is not None:
-            raise AlreadyCalled()
+            raise AlreadyCalled(self.command_line)
 
     def __or__(self, other):
         ''' | '''
@@ -60,7 +61,7 @@ class BaseCommand():
 
     def __bool__(self):
         if self.code is None:
-            raise NeverCalled()
+            raise NeverCalled(self.command_line)
         return self.code == 0
 
     def __str__(self):
@@ -71,8 +72,8 @@ class BaseCommand():
 
     @property
     def stdin(self):
-        if not self._stdin:
-            raise StdinMissing()
+        if self._stdin is None:
+            raise StdinMissing(self.command_line)
         return self._stdin
 
     @stdin.setter
@@ -81,8 +82,8 @@ class BaseCommand():
 
     @property
     def stdout(self):
-        if not self._stdout:
-            raise StdoutMissing()
+        if self._stdout is None:
+            raise StdoutMissing(self.command_line)
         return self._stdout
 
     @stdout.setter
@@ -91,8 +92,8 @@ class BaseCommand():
 
     @property
     def stderr(self):
-        if not self._stderr:
-            raise StderrMissing()
+        if self._stderr is None:
+            raise StderrMissing(self.command_line)
         return self._stderr
 
     @stderr.setter
