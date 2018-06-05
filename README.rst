@@ -1,10 +1,7 @@
-named after a friend from school, Pavel Hurgcheev.
+initially was named after a friend from school, Pavel Hurgcheev - `pash`. then
+`psh`. until free name was found - `pipeish`.
 
-or because of 'PythonAdvancedSHell' thing.
-
-or because it sounds like `bash` but for python.
-
-pick[any].
+it's like pipes in shell but not exactly. hence `pipe-ish`.
 
 [picture-of-python-looking-like-a-shell]
 
@@ -13,7 +10,7 @@ pick[any].
 # (_('ls') | _(f'grep {pattern}')).stdout
 
 ```
-from psh.commands import Command as _
-print(_('ls -la')() | _('grep psh') | _('grep 20'))
+from pipeish.commands import Command as _
+print(_('ls -la')() | _('grep pipeish') | _('grep 20'))
 ```
 

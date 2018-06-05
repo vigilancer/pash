@@ -4,7 +4,7 @@ with open("README.rst", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="psh",
+    name="pipeish",
     version="0.1.0",
     author="Andrey Elizarov",
     author_email="vigilancer@example.com",
