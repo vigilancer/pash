@@ -37,12 +37,6 @@ class AbsCommand():
     def __bool__(self):
         return self.code == 0
 
-    # def __repr__(self):
-    #     raise NotImplemented('not decided what should go there just yet')
-
-    # def __str__(self):
-    #     raise NotImplemented('not decided what should go there just yet')
-
 
 class Command(AbsCommand):
 
@@ -72,9 +66,6 @@ class Command(AbsCommand):
                       universal_newlines=True,
                       stdout=PIPE, stderr=PIPE)
 
-
-        # import pudb; pudb.set_trace()
-
         if self.stdin:
             self.stdout, self.stderr = p \
                 .communicate(input=self.stdin, timeout=self._timeout)
@@ -84,31 +75,9 @@ class Command(AbsCommand):
 
         self.code = p.returncode
 
-
-
-        # self.stdout = p.stdout
-        # self.stderr = p.stderr
-        # self.code = p.returncode
-
-
-
-        # self.stdout = f'Std out string from {self.command}'
-        # self.stderr = f'Std err string from {self.command}'
-        # self.code = 22
         return self
 
     def __or__(self, other):
-        # import pudb; pudb.set_trace()
-
         self()
-
         other.stdin = self.stdout
         return other()
-
-    # def __str__(self):
-    #     r = self.stderr
-    #     if self.stdout:
-    #         r += self.stdout
-    #     return r
-
-    # __repr__ = __str__
