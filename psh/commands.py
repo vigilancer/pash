@@ -137,6 +137,15 @@ class Command(BaseCommand):
         return self
 
     def __or__(self, other):
-        self()
-        other.stdin = self.stdout
-        return other()
+        ''' works like 'set -o pipefail' by default '''
+
+        try:
+            self()
+        except AlreadyCalled:
+            pass
+
+        if self:
+            other.stdin = self.stdout
+            return other()
+        else:
+            return self
