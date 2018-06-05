@@ -4,6 +4,7 @@
 import shlex
 from subprocess import PIPE, Popen
 import os
+import sys
 
 
 class BaseCommandException(Exception):
@@ -63,6 +64,12 @@ class BaseCommand():
         if self.code is None:
             raise NeverCalled()
         return self.code == 0
+
+    def __str__(self):
+        try:
+            return self.stderr
+        except StderrMissing:
+            return self.stdout
 
     @property
     def stdin(self):
