@@ -5,6 +5,10 @@ import shlex
 from subprocess import PIPE, Popen
 
 
+class AlreadyCalled(Exception):
+    pass
+
+
 class AbsCommand():
 
     command_line = None
@@ -44,6 +48,7 @@ class Command(AbsCommand):
 
     _args = None
     _timeout = 0
+    _called = False
 
     def __init__(self, cmd, timeout=1):
         self.command_line = cmd
@@ -51,6 +56,10 @@ class Command(AbsCommand):
         self._timeout = timeout
 
     def __call__(self):
+        if self._called:
+            raise AlreadyCalled()
+        self._called = True
+
         if self.stdin:
             p = Popen(self._args,
                       shell=False,
