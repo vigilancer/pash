@@ -60,16 +60,15 @@ class Command(AbsCommand):
                       universal_newlines=True,
                       stdin=PIPE,
                       stdout=PIPE, stderr=PIPE)
+
+            self.stdout, self.stderr = p \
+                .communicate(input=self.stdin, timeout=self._timeout)
         else:
             p = Popen(self._args,
                       shell=False,
                       universal_newlines=True,
                       stdout=PIPE, stderr=PIPE)
 
-        if self.stdin:
-            self.stdout, self.stderr = p \
-                .communicate(input=self.stdin, timeout=self._timeout)
-        else:
             self.stdout, self.stderr = p \
                 .communicate(timeout=self._timeout)
 
