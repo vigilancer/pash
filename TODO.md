@@ -20,5 +20,5 @@
 [x] create package to install with pip
 [] override __copy__ to create new fresh copy of command
 [] implement __repr__ (recreate python object) (need it?)
-[] implement __str__ (what should go there?)
+[x] implement __str__ (what should go there?)
 
