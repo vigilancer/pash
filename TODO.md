@@ -29,3 +29,12 @@
 - [] maybe it's worth to reimplement 'test' command (-z seems neat)
 - [] __call__ with argument --timeout_sec. and make it None but default
 - [] retab
+
+
+tests
+
+- [] smoke: one command
+- [] smoke: pipe two commands
+- [] smoke: pipe three commands
+- [] check execution order in pipe
+- [] check every command in pipe executed only once
