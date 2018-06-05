@@ -5,11 +5,19 @@ import shlex
 from subprocess import PIPE, Popen
 
 
-class AlreadyCalled(Exception):
+class BaseCommandException(Exception):
     pass
 
 
-class AbsCommand():
+class AlreadyCalled(BaseCommandException):
+    pass
+
+
+class NeverCalled(BaseCommandException):
+    pass
+
+
+class BaseCommand():
 
     command_line = None
 
@@ -19,8 +27,11 @@ class AbsCommand():
     code = None
 
     def __call__(self):
-        ''' execute command '''
-        raise NotImplemented()
+        ''' execute command.
+            should change self.code after command execution
+        '''
+        if self.code is not None:
+            raise AlreadyCalled()
 
     def __or__(self, other):
         ''' | '''
@@ -35,14 +46,15 @@ class AbsCommand():
         raise NotImplemented()
 
     def __bool__(self):
+        if self.code is None:
+            raise NeverCalled()
         return self.code == 0
 
 
-class Command(AbsCommand):
+class Command(BaseCommand):
 
     _args = None
     _timeout = 0
-    _called = False
 
     def __init__(self, cmd, timeout=1):
         self.command_line = cmd
@@ -50,9 +62,7 @@ class Command(AbsCommand):
         self._timeout = timeout
 
     def __call__(self):
-        if self._called:
-            raise AlreadyCalled()
-        self._called = True
+        super().__call__()
 
         if self.stdin:
             p = Popen(self._args,
