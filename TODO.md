@@ -18,4 +18,5 @@
 [] redirect to file descriptors and filenames
 [] write tests
 [x] create package to install with pip
+[] override __copy__ to create new fresh copy of command
 
