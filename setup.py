@@ -5,7 +5,7 @@ with open("README.rst", "r") as fh:
 
 setuptools.setup(
     name="psh",
-    version="0.0.2",
+    version="0.1.0",
     author="Andrey Elizarov",
     author_email="vigilancer@example.com",
     description="shell pipes and redirecting for python",
