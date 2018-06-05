@@ -3,8 +3,6 @@
 
 import shlex
 from subprocess import PIPE, Popen
-import os
-import sys
 
 
 class BaseCommandException(Exception):
