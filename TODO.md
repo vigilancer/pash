@@ -15,6 +15,7 @@
 #       if `grep` fails, whole chain will fail and xargs will not be executed
 [] maybe pipe by default should work in `pipefail` mode, and __ior__ override it
 [] redirect stdout and stderror
+[] redirect to file descriptors and filenames
 [] write tests
 [x] create package to install with pip
 
