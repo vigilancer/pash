@@ -39,3 +39,4 @@ tests
 - [] check execution order in pipe
 - [] check every command in pipe executed only once
 - [] context manager to set 'cwd' for commands executed in the same context
+- [] check that 'gunzip' works okay with pipe
