@@ -1,2 +1,2 @@
-# vim: set ts=2 sw=2 st=2 et:
-name = 'psh'
+# vim: set ts=4 sw=4 st=4 et:
+name = 'pipeish'
