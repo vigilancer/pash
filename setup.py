@@ -5,7 +5,7 @@ with open("README.rst", "r") as fh:
 
 setuptools.setup(
     name="pipeish",
-    version="0.1.1",
+    version="0.2.0",
     author="Andrey Elizarov",
     author_email="vigilancer@example.com",
     description="shell pipes and redirecting for python",
