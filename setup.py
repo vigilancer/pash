@@ -11,7 +11,7 @@ setuptools.setup(
     description="shell pipes and redirecting for python",
     long_description=long_description,
     long_description_content_type="text/x-rst",
-    url="https://github.com/vigilancer/pash",
+    url="https://github.com/vigilancer/pipeish",
     packages=setuptools.find_packages(),
     classifiers=(
         "Programming Language :: Python :: 3",
