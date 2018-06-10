@@ -1,168 +1,92 @@
 # vim: set ts=4 sw=4 st=4 et:
 
 import shlex
-from subprocess import PIPE, STDOUT, Popen
-import subprocess
+from subprocess import DEVNULL, PIPE, STDOUT, Popen
 
 
-class BaseCommandException(Exception):
-    pass
+class Command:
 
+    out_pipes = {
+        't': None,
+        'n': DEVNULL,
+        'i': PIPE,
+    }
+    err_pipes = {
+        't': None,
+        'n': DEVNULL,
+        'i': PIPE,
+        'r': STDOUT,
+    }
 
-class AlreadyCalled(BaseCommandException):
-    pass
+    popen_out = None
+    popen_err = None
+    timeout = None
 
+    def __init__(self, command_line, flags, is_last_command):
+        self.args = shlex.split(command_line)
+        self.is_last_command = is_last_command
+        self.popen_out, self.popen_err, self.timeout = \
+            None, None, None
+        self.popen_out, self.popen_err, self.timeout = \
+            self._process_flags(flags)
 
-class NeverCalled(BaseCommandException):
-    pass
+    def _process_flags(self, flags):
+        out_flag = flags[0]
+        err_flag = flags[1]
 
-
-class StdinMissing(BaseCommandException):
-    pass
-
-
-class StdoutMissing(BaseCommandException):
-    pass
-
-
-class StderrMissing(BaseCommandException):
-    pass
-
-
-class BaseCommand():
-
-    command_line = None
-
-    _stdin = None
-    _stdout = None
-    _stderr = None
-
-    code = None
-
-    def __or__(self, other):
-        ''' | '''
-        raise NotImplemented()
-
-    def __gt__(self, other):
-        ''' > '''
-        raise NotImplemented()
-
-    def __rshift__(self, other):
-        ''' >> '''
-        raise NotImplemented()
-
-    def __bool__(self):
-        if self.code is None:
-            raise NeverCalled(self.command_line)
-        return self.code == 0
-
-    def __str__(self):
-        try:
-            if len(self.stderr) > 0:
-                return self.stderr
+        if out_flag == 'd':
+            if self.is_last_command:
+                out_flag = 't'
             else:
-                return self.stdout
-        except StderrMissing:
-            return self.stdout
+                out_flag = 'i'
 
-    @property
-    def stdin(self):
-        if self._stdin is None:
-            raise StdinMissing(self.command_line)
-        return self._stdin
+        if err_flag == 'd':
+            err_flag = 't'
 
-    @stdin.setter
-    def stdin(self, value):
-        self._stdin = value
-
-    @property
-    def stdout(self):
-        if self._stdout is None:
-            raise StdoutMissing(self.command_line)
-        return self._stdout
-
-    @stdout.setter
-    def stdout(self, value):
-        self._stdout = value
-
-    @property
-    def stderr(self):
-        if self._stderr is None:
-            raise StderrMissing(self.command_line)
-        return self._stderr
-
-    @stderr.setter
-    def stderr(self, value):
-        self._stderr = value
-
-
-class Command(BaseCommand):
-
-    _args = None
-    _timeout = 0
-
-    def __init__(self, cmd, timeout=1):
-        self.command_line = cmd
-        self._args = shlex.split(cmd)
-        self._timeout = timeout
-
-    def _raise_if_was_called(self):
-        if self.code is not None:
-            raise AlreadyCalled(self.command_line)
-
-    def _exec_silent(self):
-        self._raise_if_was_called()
-
-        # XXX make distinction based on stdin more visible in code
+        flags = flags[0:2]
         try:
-            stdin = self.stdin
-            p = Popen(self._args,
-                      stdin=PIPE,
-                      stdout=PIPE, stderr=PIPE,
-                      shell=False,
-                      universal_newlines=True,
-                      )
-            self.stdout, self.stderr = p \
-                .communicate(input=stdin, timeout=self._timeout)
-        except StdinMissing:
-            p = Popen(self._args,
-                      stdout=PIPE, stderr=PIPE,
-                      shell=False,
-                      universal_newlines=True,
-                      )
+            timeout = int(flags[2:])
+        except ValueError:
+            timeout = None
 
-            self.stdout, self.stderr = p \
-                .communicate(timeout=self._timeout)
+        return (self.out_pipes[out_flag], self.err_pipes[err_flag], timeout)
 
-        self.code = p.returncode
-        return self
+    def __call__(self, input=None):
+        p = Popen(self.args,
+                  stdin=PIPE,
+                  stdout=self.popen_out,
+                  stderr=self.popen_err,
+                  shell=False,
+                  universal_newlines=True,
+                  )
 
-    def _exec(self):
-        self._raise_if_was_called()
+        stdout, stderr = p \
+            .communicate(input=input, timeout=self.timeout)
+        return (stdout, stderr)
 
-        p = subprocess.run(self._args,
-                           stderr=STDOUT,
-                           shell=False,
-                           universal_newlines=True,
-                           check=True,
-                           )
 
-        self.code = p.returncode
-        return self
+class Pipe:
+    def __init__(self, *cmds):
+        self.cmds = cmds
+        self()
+        pass
 
     def __call__(self):
-        self._exec()
+        input = None
+        for idx, cmd in enumerate(self.cmds):
+            if type(cmd) == tuple:
+                command_line = cmd[0]
+                flags = cmd[1]
+                try:
+                    # if flags contain only timeout
+                    int(flags)
+                    flags = f'dd{flags}'
+                except ValueError:
+                    pass
+            else:
+                command_line = cmd
+                flags = 'dd'
 
-    def __or__(self, other):
-        ''' works like 'set -o pipefail' by default '''
-
-        try:
-            self._exec_silent()
-        except AlreadyCalled:
-            pass
-
-        if self:
-            other.stdin = self.stdout
-            return other._exec_silent()
-        else:
-            return self
+            is_last_command = (idx == len(self.cmds) - 1)
+            c = Command(command_line, flags, is_last_command)
+            input, _ = c(input=input)
