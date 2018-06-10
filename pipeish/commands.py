@@ -1,5 +1,4 @@
-# vim: set ts=2 sw=2 st=2 et:
-
+# vim: set ts=4 sw=4 st=4 et:
 
 import shlex
 from subprocess import PIPE, STDOUT, Popen
