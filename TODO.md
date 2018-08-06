@@ -1,42 +1,36 @@
 
 - [x] create github repo
 - [x] exec with subprocess
-- [x] collect output in array with os-specific line-end as separator
-- [] redirect > to file and /dev/null
-- [] redirect >> to file and /dev/null
-- [] handle commands with params
-- [x] stub not implemented operators
-- [x] override truth (__bool__) based on return code (nonzero == False)
-- [x] emulate `set -e` and/or `set -o pipefail`
-- [x] implement 'pipefail' somehow.
+- [] collect output in variable
+- [] redirect to file and /dev/null
+- [] redirect to file and /dev/null
+- [x] handle commands with params
+- [] override truth (__bool__) based on return code (nonzero == False)
+- [] emulate `set -e` and/or `set -o pipefail`
+- [] implement 'pipefail' somehow.
      maybe with `|=` (__ior__)
      _('ls') | _('grep') |= ('xargs')
      if `grep` fails, whole chain will fail and xargs will not be executed
-- [x] maybe pipe by default should work in `pipefail` mode, and __ior__ override it
+- [] maybe pipe by default should work in `pipefail` mode, and __ior__ override it
       but without __ior__
 - [] redirect stdout and stderror
+- [] add default behaviour - redirect stderr to terminal even when stdout redirected to next commanad in pipe
 - [] redirect to file descriptors and filenames
-- [] write tests
 - [x] create package to install with pip
-- [] override __copy__ to create new fresh copy of command
 - [] implement __repr__ (recreate python object) (need it?)
-- [x] implement __str__ (what should go there?)
+- [] implement __str__ (what should go there?)
 - [] add examples for && and || (with 'and' and 'or')
 - [] make gif with all usecases
 - [x] research alternative implementation: https://stackoverflow.com/questions/15008807/overriding-or-operator-on-python-classes
 - [] add to readme 'restrictions' chapter
 - [] simplify env variable access (os.environ- ['HOME'] etc)
 - [] maybe it's worth to reimplement 'test' command (-z seems neat)
-- [] __call__ with argument --timeout_sec. and make it None but default
-- [] retab
 
 
 tests
-
-- [] smoke: one command
-- [] smoke: pipe two commands
-- [] smoke: pipe three commands
-- [] check execution order in pipe
-- [] check every command in pipe executed only once
+- [x] smoke: one command
+- [x] smoke: pipe two commands
+- [x] smoke: pipe three commands
+- [x] check execution order in pipe
 - [] context manager to set 'cwd' for commands executed in the same context
-- [] check that 'gunzip' works okay with pipe
+- [x] check that 'gunzip' works okay with pipe
