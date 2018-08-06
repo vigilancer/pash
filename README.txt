@@ -28,3 +28,13 @@ most likely.
 
 feel free to open issues with common use cases, I'll try to prioritize
 what seems important and integrate.
+
+
+Links
+-----
+
+"Bash is the JavaScript of systems programming". Strongly agree.
+https://github.com/progrium/bashstyle
+
+"shell=True: Security Considerations"
+https://docs.python.org/3/library/subprocess.html#security-considerations
