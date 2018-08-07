@@ -22,9 +22,9 @@ function run_single_test() {
     echo OK
   else
     echo FAIL
-    echo "To know more:"
-    echo "    VERBOSE_DIFF=1 $(basename $0) $test_name"
-
+    [[ -z $VERBOSE_DIFF ]] && \
+      printf "To know more:\\nVERBOSE_DIFF=1 %s %s\\n" \
+        "$(basename $0)" "$test_name"
   fi
 }
 
@@ -40,10 +40,9 @@ function _print_env() {
 function main() {
   local test_names=(
     'smoke'
-    'fail'
+    'should_fail'
   )
   [[ $# -ne 0 ]] && test_names=($@)
-  echo $#
 
   local bash_path=$(which bash)
   local python_path=$(which python3)
