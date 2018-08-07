@@ -5,6 +5,10 @@ import os; import sys; sys.path.insert(0, os.path.abspath('..'))
 from pipeish import Pipe as _
 
 _(
+    'date +%m'
+)
+
+_(
     'uname -a',
     'awk \'BEGIN { RS=" " }; { print $1; }\'',
     'sort',

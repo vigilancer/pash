@@ -1,3 +1,6 @@
+
+date +%m
+
 uname -a | \
   awk 'BEGIN { RS=" " }; { print $1; }' | \
   sort | \
