@@ -6,18 +6,21 @@ import subprocess
 
 
 class Pipe:
-    '''
-    pipe
-    _('ls', 'grep p')
-    _('ls', 'grep p', 'grep Pip')
-    _('gzcat tests/stagedb.sql.gz', "grep ISO", 'wc -l', "tr -d ' '")
-    '''
 
-    def __init__(self, *args):
+    def __init__(self, *args, pipes=True):
+        '''
+        set `pipes` to False to treat single string as one command
+        even if it contains `|`s
+        '''
+
         if len(args) == 0:
             return
 
         self.cmds = args
+
+        # maybe it's single string with pipes
+        if pipes and len(self.cmds) == 1:
+            self.cmds = [c.strip() for c in self.cmds[0].split('|') if c]
 
         if len(self.cmds) == 1:
             self.__exec_single()

@@ -6,23 +6,38 @@ import os; import sys; sys.path.insert(0, os.path.abspath('..'))
 from pipeish import Pipe as _
 
 description = ' \
-Test for one, two and three commands in pipe. \
+Just smoke semi-auto test to check if anything was broken. \
 '
 
-_(f'echo {description}')
+print(f'{description}')
 
 
-def __test(cmd):
+def __test_single_string(cmd):
+    print(f"\np$ {cmd}")
+    _(cmd)
+
+
+def __test_array_of_commands(cmd):
     print(f"\np$ {cmd}")
     cmds = [c.strip() for c in cmd.split('|') if c]
     _(*cmds)
 
 
 cmd = 'ls'
-__test(cmd)
+__test_single_string(cmd)
 
 cmd = 'ls -la | head -3'
-__test(cmd)
+__test_single_string(cmd)
 
 cmd = "ls -1 | wc -l | tr -d ' '"
-__test(cmd)
+__test_single_string(cmd)
+
+
+print('\n---\n')
+
+
+cmd = 'ls -la | head -3'
+__test_array_of_commands(cmd)
+
+cmd = "ls -1 | wc -l | tr -d ' '"
+__test_array_of_commands(cmd)
