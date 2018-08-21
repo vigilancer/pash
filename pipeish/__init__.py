@@ -5,9 +5,16 @@ import shlex
 import subprocess
 
 
+class Environment:
+    pass
+
+
 class Pipe:
 
-    def __init__(self, *args):
+    def __init__(self, env=Environment, *args):
+        self.env = env
+
+    def __call__(self, *args):
         if len(args) == 0:
             return
 
@@ -21,6 +28,12 @@ class Pipe:
             self.__exec_single()
         else:
             self.__exec_multiple()
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *args):
+        pass
 
     def __exec_multiple(self):
         proc = subprocess.Popen(

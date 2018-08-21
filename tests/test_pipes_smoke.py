@@ -4,15 +4,15 @@
 import os; import sys; sys.path.insert(0, os.path.abspath('..'))
 from pipeish import Pipe as _
 
-_(
+_()(
     'date +%m'
 )
 
-_(
+_()(
     'uname -a',
     'awk \'BEGIN { RS=" " }; { print $1; }\'',
     'sort',
     'head -3',
 )
 
-_("ls -1 | wc -l | tr -d ' '")
+_()("ls -1 | wc -l | tr -d ' '")

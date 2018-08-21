@@ -50,6 +50,7 @@ function _print_env() {
 function main() {
   local test_names=(
     'pipes_smoke'
+    'false_code'
     # 'should_fail'
   )
   [[ $# -ne 0 ]] && test_names=($@)
