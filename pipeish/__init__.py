@@ -12,8 +12,9 @@ class Environment:
 
 class Shell:
 
-    def __init__(self, env=Environment, *args):
+    def __init__(self, env=Environment(), check=True, *args):
         self.env = env
+        self.check = check
 
     def __call__(self, *args):
         if len(args) == 0:
@@ -34,7 +35,7 @@ class Shell:
         return self
 
     def __exit__(self, *args):
-        if self.retcode is not 0:
+        if self.check and self.retcode is not 0:
             sys.exit(self.retcode)
 
     def __exec_multiple(self):

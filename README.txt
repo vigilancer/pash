@@ -11,29 +11,53 @@ How to use
 -----
 for installed package:
 ```
-from pipeish import Shell as _
+from pipeish import Shell
 ```
 
 for development (replace `os.getcwd()` with path to pipeish sources)
 ```
 import os; import sys; sys.path.insert(0, os.getcwd())
-from pipeish import Shell as _
+from pipeish import Shell
 ```
 
 Examples
 -----
 
+simple as it is:
+
 ```
 _()('ls')
+_()('ls -la | head -3')  # single string with '|' in shell-like way
+```
+
+it uses `str.split('|')` under the hood, so if your arguments contain `|`s you can feed comma separated list instead.
+
+```
 _()('gzcat stagedb.sql.gz', 'psql -U usermane pentagon_db')
 ```
 
 can we do '|'s? yes, we can!
 
+
+but none of these will cope with exit codes.
+for this to work use `Shell` as context manager:
+
 ```
-_()('ls -la | head -3')  # single string with '|' in shell-like-way
+with Shell() as _:
+    _('true | false')
 ```
-it uses `str.split('|')` under the hood, so if your arguments contain `|`s you can feed comma separated list instead.
+
+now your python script will exits with the same exit code as bash script with same commands. but it will exit right after exiting `with` scope. nothing below context manager will be executed. to disable this behaviour there is `check` argument:
+
+```
+with Shell(check=False) as _:
+    _('true | false')
+
+print (_.retcode)
+```
+
+this way you can run different 'Shell's in one script which allows more complicated scenarios.
+
 
 more are comming!
 
