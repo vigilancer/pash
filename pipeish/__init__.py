@@ -9,7 +9,7 @@ class Environment:
     pass
 
 
-class Pipe:
+class Shell:
 
     def __init__(self, env=Environment, *args):
         self.env = env

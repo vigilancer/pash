@@ -11,27 +11,27 @@ How to use
 -----
 for installed package:
 ```
-from pipeish import Pipe as _
+from pipeish import Shell as _
 ```
 
 for development (replace `os.getcwd()` with path to pipeish sources)
 ```
 import os; import sys; sys.path.insert(0, os.getcwd())
-from pipeish import Pipe as _
+from pipeish import Shell as _
 ```
 
 Examples
 -----
 
 ```
-_('ls')
-_('gzcat stagedb.sql.gz', 'psql -U usermane pentagon_db')
+_()('ls')
+_()('gzcat stagedb.sql.gz', 'psql -U usermane pentagon_db')
 ```
 
 can we do '|'s? yes, we can!
 
 ```
-_('ls -la | head -3')  # single string with '|' in shell-like-way
+_()('ls -la | head -3')  # single string with '|' in shell-like-way
 ```
 it uses `str.split('|')` under the hood, so if your arguments contain `|`s you can feed comma separated list instead.
 
