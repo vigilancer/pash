@@ -5,4 +5,4 @@ import os; import sys; sys.path.insert(0, os.path.abspath('..'))
 from pipeish import Shell
 
 with Shell() as _:
-    _('false')
+    _('true | false')

@@ -3,6 +3,7 @@
 import shlex
 # from subprocess import DEVNULL, PIPE, STDOUT, Popen
 import subprocess
+import sys
 
 
 class Environment:
@@ -33,13 +34,15 @@ class Shell:
         return self
 
     def __exit__(self, *args):
-        pass
+        if self.retcode is not 0:
+            sys.exit(self.retcode)
 
     def __exec_multiple(self):
         proc = subprocess.Popen(
             shlex.split(self.cmds[0]),
             stdout=subprocess.PIPE,
         )
+        self.retcode = proc.returncode
 
         for cmd in self.cmds[1:-1]:
             proc = subprocess.Popen(
@@ -47,12 +50,15 @@ class Shell:
                 stdin=proc.stdout,
                 stdout=subprocess.PIPE,
             )
+            self.retcode = proc.returncode
 
         proc = subprocess.Popen(
             shlex.split(self.cmds[-1]),
             stdin=proc.stdout,
         )
         proc.wait()
+        self.retcode = proc.returncode
 
     def __exec_single(self):
-        subprocess.run(shlex.split(self.cmds[0]))
+        p = subprocess.run(shlex.split(self.cmds[0]))
+        self.retcode = p.returncode
