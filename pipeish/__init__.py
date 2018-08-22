@@ -6,14 +6,9 @@ import subprocess
 import sys
 
 
-class Environment:
-    pass
-
-
 class Shell:
 
-    def __init__(self, env=Environment(), check=True, *args):
-        self.env = env
+    def __init__(self, check=True, *args):
         self.check = check
 
     def __call__(self, *args):
