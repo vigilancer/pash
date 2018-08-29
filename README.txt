@@ -51,7 +51,6 @@ _()(
 )
 ```
 
-
 but none of these will cope with exit codes.
 for this to work use `Shell` as context manager:
 
@@ -69,8 +68,22 @@ with Shell(check=False) as _:
 print (_.last_retcode)
 ```
 
-this way you can run different 'Shell's in one script which allows more complicated scenarios.
+this way you can run different `Shell`s in one script which allows more complicated scenarios.
 
+
+to capture outout of command you have to set 'i' option for stdout of last command:
+```
+with Shell() as _:
+    out, err, exit_code = _(['uname -a', 'id'])
+```
+
+this looks a bit inconvenient, but this is best replacement for POSIX shell redirection syntax I came up so far.
+in this example:
+1. output will be captured into `out` and will not be printed in terminal.
+similiar to when you do `out = $(uname -a)` in bash, but here you can capture all two streams along with exit code in one call.
+2. errors will be printed into terminal and will not be captured. which is happening when you forget to set redirect `2>&1` or `2>/dev/null` in bash script.
+you can totally do it by the way in `pipeish` with respective options `r` or `n` for stderr ('ir' or 'in' for this example).
+3. `exit_code` will contain exit code of _last_ command. which is you kinda expect when running chain of commands.
 
 more are comming!
 
