@@ -40,7 +40,7 @@ if you need fancy redirections provide tuple (or list) with redirection options 
 options are always two characters, first for `stdout` and second for `stderr`.
 for example, 'nt' means "redirect stdout to /dev/null and don't redirect stderr".
 
-there are special variant for each stream, 'd', which means 'default behaviour'.
+there is a special variant for each stream, 'd', which means 'default behaviour'.
 by default `pipeish` tryies to do what you expect from the same command when it runs in shell.
 
 
