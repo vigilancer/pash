@@ -42,10 +42,8 @@ class Shell:
 
         if len(self.cmds) == 0:
             return
-        elif len(self.cmds) == 1:
-            self.__exec_single()
         else:
-            self.__exec_multiple()
+            self.__exec()
 
     def __enter__(self):
         return self
@@ -54,7 +52,7 @@ class Shell:
         if self.check and self.retcode is not 0:
             sys.exit(self.retcode)
 
-    def __exec_multiple(self):
+    def __exec(self):
         proc = None
         stdin = None
 
@@ -71,25 +69,10 @@ class Shell:
             stdin = proc.stdout
 
             if prev_proc and prev_proc.stdout:
-                # https://docs.python.org/3.6/library/subprocess.html#replacing-shell-pipeline
+# https://docs.python.org/3.6/library/subprocess.html#replacing-shell-pipeline
                 # Allow 'prev_proc' to receive a SIGPIPE if 'proc' exits.
                 prev_proc.stdout.close()
 
-            self.retcode = proc.returncode
-
-        proc.wait()
-        self.retcode = proc.returncode
-
-    def __exec_single(self):
-        c = self.cmds[0]
-        o, e = self.__parse_cmd_opts(c[1], False)
-
-        proc = subprocess.Popen(
-            shlex.split(c[0]),
-            stdin=None,
-            stdout=o, stderr=e,
-            universal_newlines=True,
-        )
         proc.wait()
         self.retcode = proc.returncode
 
