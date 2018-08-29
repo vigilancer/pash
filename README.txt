@@ -66,7 +66,7 @@ now your python script will exits with the same exit code as bash script with sa
 with Shell(check=False) as _:
     _('true | false')
 
-print (_.retcode)
+print (_.last_retcode)
 ```
 
 this way you can run different 'Shell's in one script which allows more complicated scenarios.
