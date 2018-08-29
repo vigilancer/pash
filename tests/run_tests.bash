@@ -64,6 +64,7 @@ function main() {
     'pipes_smoke'
     'false_code'
     'redirections'
+    'assignment'
     'should_fail'
   )
   [[ $# -ne 0 ]] && test_names=($@)

@@ -12,21 +12,24 @@ class Shell:
     out_pipes = {
         't': None,
         'n': DEVNULL,
+        'i': PIPE,
     }
     err_pipes = {
         't': None,
         'n': DEVNULL,
         'r': STDOUT,
+        'i': PIPE,
     }
 
     def __init__(self, check=True, *args):
         self.check = check
+        self.last_retcode = None
 
     def __update_cmds(self, *args):
         self.cmds = []
 
         # maybe it is a single string with pipes
-        if len(args) == 1:
+        if len(args) == 1 and isinstance(args[0], str):
             args = [c.strip() for c in args[0].split('|') if c]
 
         for a in args:
@@ -41,16 +44,16 @@ class Shell:
         self.__update_cmds(*args)
 
         if len(self.cmds) == 0:
-            return
+            return None, None, None
         else:
-            self.__exec()
+            return self.__exec()
 
     def __enter__(self):
         return self
 
     def __exit__(self, *args):
-        if self.check and self.retcode is not 0:
-            sys.exit(self.retcode)
+        if self.check and self.last_retcode is not 0:
+            sys.exit(self.last_retcode)
 
     def __exec(self):
         proc = None
@@ -74,7 +77,16 @@ class Shell:
                 prev_proc.stdout.close()
 
         proc.wait()
-        self.retcode = proc.returncode
+
+        out = None
+        err = None
+        self.last_retcode = proc.returncode
+
+        if proc.stdout:
+            out = proc.stdout.read()
+        if proc.stderr:
+            err = proc.stderr.read()
+        return (out, err, self.last_retcode)
 
     def __parse_cmd_opts(self, opts, have_next_command):
         if opts[0] == 'd':
