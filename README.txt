@@ -36,7 +36,20 @@ it uses `str.split('|')` under the hood, so if your arguments contain `|`s you c
 _()('gzcat stagedb.sql.gz', 'psql -U usermane pentagon_db')
 ```
 
-can we do '|'s? yes, we can!
+if you need fancy redirections provide tuple (or list) with redirection options instead of string.
+options are always two characters, first for `stdout` and second for `stderr`.
+for example, 'nt' means "redirect stdout to /dev/null and don't redirect stderr".
+
+there are special variant for each stream, 'd', which means 'default behaviour'.
+by default `pipeish` tryies to do what you expect from the same command when it runs in shell.
+
+
+```
+_()(
+ ['ls -la', 'nt'],
+ ('grep Pip', 'dd')
+)
+```
 
 
 but none of these will cope with exit codes.
