@@ -59,10 +59,10 @@ with Shell() as _:
     _('true | false')
 ```
 
-now your python script will exits with the same exit code as bash script with same commands. but it will exit right after exiting `with` scope. nothing below context manager will be executed. to disable this behaviour there is `check` argument:
+now your python script will exits with the same exit code as bash script with same commands. but it will exit right after exiting `with` scope. nothing below context manager will be executed. to disable this behaviour there is `shellfail` argument:
 
 ```
-with Shell(check=False) as _:
+with Shell(shellfail=False) as _:
     _('true | false')
 
 print (_.last_retcode)
@@ -84,6 +84,11 @@ similiar to when you do `out = $(uname -a)` in bash, but here you can capture al
 2. errors will be printed into terminal and will not be captured. which is happening when you forget to set redirect `2>&1` or `2>/dev/null` in bash script.
 you can totally do it by the way in `pipeish` with respective options `r` or `n` for stderr ('ir' or 'in' for this example).
 3. `exit_code` will contain exit code of _last_ command. which is you kinda expect when running chain of commands.
+
+
+also there are 'pipefail' and 'errexit' construnctor arguments.
+well, they are kinda WIP.
+
 
 more are comming!
 

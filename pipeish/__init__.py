@@ -21,8 +21,17 @@ class Shell:
         'i': PIPE,
     }
 
-    def __init__(self, check=True, *args):
-        self.check = check
+    def __init__(self, errexit=True, pipefail=False, shellfail=True, *args):
+        '''
+        errexit=True equals 'set -e' or 'set -o errexit' in posix shell
+        pipefail=True equals 'set -o pipefail' in bash
+
+        WARNING: pipefail fails tests so setting it to False now by default.
+        be aware that it works as expected like 50% of a time.
+        '''
+        self.errexit = errexit
+        self.pipefail = pipefail
+        self.shellfail = shellfail
         self.last_retcode = None
 
     def __update_cmds(self, *args):
@@ -42,6 +51,7 @@ class Shell:
 
     def __call__(self, *args):
         self.__update_cmds(*args)
+        self.last_retcode = None
 
         if len(self.cmds) == 0:
             return None, None, None
@@ -52,8 +62,9 @@ class Shell:
         return self
 
     def __exit__(self, *args):
-        if self.check and self.last_retcode is not 0:
-            sys.exit(self.last_retcode)
+        if self.shellfail and \
+                self.last_retcode is not None and self.last_retcode != 0:
+            exit(self.last_retcode)
 
     def __exec(self):
         proc = None
@@ -76,11 +87,20 @@ class Shell:
                 # Allow 'prev_proc' to receive a SIGPIPE if 'proc' exits.
                 prev_proc.stdout.close()
 
+            self.last_retcode = proc.poll()
+            if self.pipefail and \
+                    self.last_retcode is not None and self.last_retcode != 0:
+                exit(self.last_retcode)
+
         proc.wait()
 
         out = None
         err = None
-        self.last_retcode = proc.returncode
+
+        self.last_retcode = proc.poll()
+        if self.errexit and \
+                self.last_retcode is not None and self.last_retcode != 0:
+            exit(self.last_retcode)
 
         if proc.stdout:
             out = proc.stdout.read()
