@@ -1,11 +1,11 @@
 import setuptools
 
-with open("README.rst", "r") as fh:
+with open("README.txt", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
     name="pipeish",
-    version="0.2.0",
+    version="0.3.0",
     author="Andrey Elizarov",
     author_email="vigilancer@example.com",
     description="shell pipes and redirecting for python",
