@@ -4,7 +4,7 @@
 import os; import sys; sys.path.insert(0, os.path.abspath('..'))
 from pipeish import Shell
 
-with Shell(check=False) as _:
+with Shell(shellfail=False) as _:
     _(
         'printf Stdout1',
         ('xargs -I{} echo {}', 'dn')
